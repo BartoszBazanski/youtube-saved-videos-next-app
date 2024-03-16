@@ -1,3 +1,5 @@
+'use client';
+
 import { IndexedVideo } from '@/types/video';
 import {
   createContext,

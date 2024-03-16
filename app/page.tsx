@@ -1,8 +1,12 @@
-import Providers from '@/components/Providers';
+import { Container } from '@mui/material';
+import dynamic from 'next/dynamic';
+
 import Form from '@/components/Form';
 import Videos from '@/components/Videos';
 
-import { Container } from '@mui/material';
+const Providers = dynamic(() => import('../components/Providers'), {
+  ssr: false
+});
 
 export default function Home() {
   return (

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { SyntheticEvent, useMemo } from 'react';
 import {
   Box,

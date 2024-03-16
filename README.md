@@ -13,6 +13,7 @@ pnpm dev
 # or
 bun dev
 ```
+Create `.env.local` in the root directory and add `NEXT_PUBLIC_YOUTUBE_API_KEY` variable with your API key. Without it the app will not work.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

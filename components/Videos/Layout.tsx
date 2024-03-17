@@ -13,7 +13,9 @@ const Layout = () => {
     _event: React.MouseEvent<HTMLElement>,
     newLayout: typeof layout
   ) => {
-    setLayout(newLayout);
+    if (newLayout !== null) {
+      setLayout(newLayout);
+    }
   };
   return (
     <ToggleButtonGroup

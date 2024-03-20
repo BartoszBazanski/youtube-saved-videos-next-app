@@ -72,7 +72,7 @@ const VideoCard = ({ data, isGrid }: VideoCardProps) => {
             height: '100%'
           }}
         >
-          <Box width={isVertical ? '100%' : 200}>
+          <Box width={isVertical ? '100%' : 200} minWidth={200}>
             <div className="video-responsive">
               <div className="video__wrapper">
                 <Image
@@ -86,24 +86,31 @@ const VideoCard = ({ data, isGrid }: VideoCardProps) => {
               </div>
             </div>
           </Box>
-          <Grid container flex={1} wrap="nowrap">
-            <Grid item xs={isVertical ? 10 : 11}>
+          <Grid
+            container
+            flex={1}
+            wrap="nowrap"
+            maxWidth={isVertical ? '100%' : 'calc(100% - 200px)'}
+          >
+            <Grid item width="100%" maxWidth="calc(100% - 75px)">
               <Stack
                 direction="column"
                 justifyContent="space-between"
                 padding="1rem"
                 spacing={3}
               >
-                <Typography
-                  sx={{
-                    fontWeight: 700,
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                    textWrap: 'nowrap'
-                  }}
-                >
-                  {title}
-                </Typography>
+                <Box overflow="hidden" flexShrink={1}>
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      textOverflow: 'ellipsis',
+                      textWrap: 'nowrap',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    {title}
+                  </Typography>
+                </Box>
                 <Stack direction="row" flexWrap={'wrap'} gap={1}>
                   <Chip
                     icon={<VisibilityIcon />}
@@ -124,7 +131,7 @@ const VideoCard = ({ data, isGrid }: VideoCardProps) => {
                 </Stack>
               </Stack>
             </Grid>
-            <Grid item xs={isVertical ? 2 : 1}>
+            <Grid item xs="auto" minWidth={75}>
               <Button
                 variant="contained"
                 color="error"

@@ -8,10 +8,19 @@ import { useVideoContext } from '@/context/video';
 import { Video, VideoStats } from '@/types/video';
 
 type YouTubeResponse = {
-  items: Video[];
+  data: {
+    items: Video[];
+  };
 };
 type YouTubeStatsResponse = {
-  items: VideoStats[];
+  data: {
+    items: VideoStats[];
+  };
+};
+type YouTubeErrorResponse = {
+  error: {
+    message: string;
+  };
 };
 
 const Form = () => {
@@ -30,24 +39,23 @@ const Form = () => {
 
     try {
       const searchParams = new URLSearchParams({
-        key: process.env.NEXT_PUBLIC_YOUTUBE_API_KEY ?? '',
         q: quota,
         type: 'video',
         part: 'snippet',
         resultsPerPage: '1'
       });
-      const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?${searchParams.toString()}`
-      );
+      const response = await fetch(`/api/search?${searchParams.toString()}`);
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const { error }: YouTubeErrorResponse = await response.json();
+
+        throw new Error(error.message);
       }
 
-      const result: YouTubeResponse = await response.json();
+      const { data }: YouTubeResponse = await response.json();
 
-      if (result?.items?.length) {
-        const video = result.items[0];
+      if (data?.items?.length) {
+        const video = data.items[0];
 
         if (
           videos.length &&
@@ -57,25 +65,27 @@ const Form = () => {
         }
 
         const statsParams = new URLSearchParams({
-          key: process.env.NEXT_PUBLIC_YOUTUBE_API_KEY ?? '',
           id: video.id.videoId,
           part: 'statistics'
         });
         const statsResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/videos?${statsParams.toString()}`
+          `/api/videos?${statsParams.toString()}`
         );
 
         if (!statsResponse.ok) {
-          throw new Error('Network response was not ok');
+          const { error }: YouTubeErrorResponse = await statsResponse.json();
+
+          throw new Error(error.message);
         }
 
-        const statsResults: YouTubeStatsResponse = await statsResponse.json();
+        const { data: statsData }: YouTubeStatsResponse =
+          await statsResponse.json();
 
         await add({
           id: video?.id?.videoId,
           title: video?.snippet?.title,
           thumbnail: video?.snippet?.thumbnails?.high,
-          viewCount: statsResults?.items[0]?.statistics?.viewCount ?? '0',
+          viewCount: statsData?.items[0]?.statistics?.viewCount ?? '0',
           createdAt: new Date()
         });
         setQuota('');

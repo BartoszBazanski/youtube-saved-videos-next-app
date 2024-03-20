@@ -23,6 +23,8 @@ type VideoContext = {
   setSelectedVideo: Dispatch<SetStateAction<VideoContext['selectedVideo']>>;
   layout: 'grid' | 'list';
   setLayout: Dispatch<SetStateAction<VideoContext['layout']>>;
+  page: number;
+  setPage: Dispatch<SetStateAction<VideoContext['page']>>;
 };
 
 const Context = createContext<VideoContext>({} as VideoContext);
@@ -33,6 +35,7 @@ const VideoProvider = memo(({ children }: PropsWithChildren<{}>) => {
   const [sort, setSort] = useState<VideoContext['sort']>('newest');
   const [selectedVideo, setSelectedVideo] = useState<IndexedVideo | null>(null);
   const [layout, setLayout] = useState<VideoContext['layout']>('list');
+  const [page, setPage] = useState<VideoContext['page']>(1);
 
   const getVideos = useCallback(async () => {
     const videos: IndexedVideo[] = await getAll();
@@ -60,7 +63,9 @@ const VideoProvider = memo(({ children }: PropsWithChildren<{}>) => {
     selectedVideo,
     setSelectedVideo,
     layout,
-    setLayout
+    setLayout,
+    page,
+    setPage
   } as VideoContext;
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;

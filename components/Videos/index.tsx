@@ -12,12 +12,13 @@ import Sort from './Sort';
 import VideoModal from './VideoModal';
 import Layout from './Layout';
 import VideoCard from './VideoCard';
+import DeleteModal from './DeleteModal';
 
 const VIDEOS_PER_PAGE = 6;
 
 const Videos = () => {
-  const [page, setPage] = useState(1);
-  const { videos, getVideos, layout } = useVideoContext();
+  const { videos, getVideos, layout, page, setPage } = useVideoContext();
+  const [openDelete, setOpenDelete] = useState(false);
   const { clear } = useIndexedDB('videos');
   const paginatedVideos = useMemo(
     () =>
@@ -56,8 +57,9 @@ const Videos = () => {
           <Button
             variant="contained"
             color="error"
+            disabled={!videos?.length}
             startIcon={<DeleteIcon />}
-            onClick={handleClear}
+            onClick={() => setOpenDelete(true)}
           >
             Clear
           </Button>
@@ -80,15 +82,22 @@ const Videos = () => {
         </Grid>
       )}
       <Stack direction="row" justifyContent="center" my="20px">
-        <Pagination
-          count={paginatedVideos?.length}
-          variant="outlined"
-          shape="rounded"
-          page={page}
-          onChange={handleChange}
-        />
+        {paginatedVideos?.length > 1 && (
+          <Pagination
+            count={paginatedVideos?.length}
+            variant="outlined"
+            shape="rounded"
+            page={page}
+            onChange={handleChange}
+          />
+        )}
       </Stack>
       <VideoModal />
+      <DeleteModal
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        onSubmit={handleClear}
+      />
     </>
   );
 };

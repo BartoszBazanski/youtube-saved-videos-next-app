@@ -6,15 +6,17 @@ import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useVideoContext } from '@/context/video';
 
 const Sort = () => {
-  const { sort, setSort } = useVideoContext();
+  const { sort, setSort, setPage } = useVideoContext();
   const handleSorting = (
     _event: React.MouseEvent<HTMLElement>,
     newSorting: typeof sort
   ) => {
     if (newSorting !== null) {
       setSort(newSorting);
+      setPage(1);
     }
   };
+
   return (
     <ToggleButtonGroup
       value={sort}
